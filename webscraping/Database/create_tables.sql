@@ -36,8 +36,7 @@ CREATE TABLE agreement (
     cau VARCHAR(30),
     id_address INTEGER NULL,
     id_client_erp INTEGER NULL,
-    id_cia_client INTEGER NULL,
-    id_cia_several INTEGER NULL
+    id_cia_client INTEGER NULL
 );
 
 CREATE TABLE cia_several (
@@ -138,7 +137,8 @@ CREATE TABLE proposal (
     concept VARCHAR NULL,
     date DATE NULL,
     savings FLOAT NULL,
-    id_agreement INTEGER NULL
+    id_agreement INTEGER NULL,
+    id_cia_several INTEGER NULL
 );
 
 CREATE TABLE type_proposal (
@@ -174,11 +174,6 @@ ADD CONSTRAINT fk_agree_cia_client
 FOREIGN KEY (id_cia_client)
 REFERENCES cia_client(id);
 
-ALTER TABLE agreement
-ADD CONSTRAINT fk_agree_cia_several
-FOREIGN KEY (id_cia_several)
-REFERENCES cia_several(id);
-
 -- CIA Client
 ALTER TABLE cia_client
 ADD CONSTRAINT fk_cia_client_prize
@@ -202,6 +197,11 @@ ALTER TABLE proposal
 ADD CONSTRAINT fk_proposal_agree
 FOREIGN KEY (id_agreement)
 REFERENCES agreement(id);
+
+ALTER TABLE proposal
+ADD CONSTRAINT fk_pro_cia_several
+FOREIGN KEY (id_cia_several)
+REFERENCES cia_several(id);
 
 --TYPE PROPOSAL CONSTRAINT
 ALTER TABLE type_proposal
