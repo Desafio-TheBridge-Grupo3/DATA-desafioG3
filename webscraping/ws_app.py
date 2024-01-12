@@ -44,14 +44,7 @@ def get_soup_info(driver):
 
 def webscraping_firefox_candelas(cups):
     
-    path_driver = os.getcwd() + "\..\webscraping\chromedriver-win64\chromedriver.exe"
-    print(path_driver)
-    # Create driver Chrome
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-
-    servicio = Service(path_driver)
-    driver = webdriver.Chrome(service=servicio, options=chrome_options)
+    driver = webdriver.Chrome()
     driver.get(URL)
     assert "Candela"
     time.sleep(3)
