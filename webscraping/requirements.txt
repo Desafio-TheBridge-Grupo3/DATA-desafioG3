@@ -1,1 +1,3 @@
 selenium==4.16.0
+Flask-Limiter==3.5.0
+Cerberus==1.3.5

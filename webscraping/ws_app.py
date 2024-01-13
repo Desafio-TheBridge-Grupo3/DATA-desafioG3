@@ -42,41 +42,9 @@ def get_soup_info(driver):
 
     return candela_info
 
-def webscraping_firefox_candelas(cups):
-    
-    driver = webdriver.Chrome()
-    driver.get(URL)
-    assert "Candela"
-    time.sleep(3)
-
-    # Login in candelas web
-
-    driver.find_element(By.ID, "select_1").click()
-    time.sleep(1)
-    driver.find_element(By.ID, "select_option_3").click()
-    driver.find_element(By.NAME, "usuario").send_keys(USER)
-    driver.find_element(By.NAME, "password").send_keys(PASSWORD)
-    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/form/button').click()
-    time.sleep(3)
-
-    # Download info
-
-    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[1]/ul/li[3]/a').click()
-    time.sleep(1)
-    driver.find_element(By.ID, "input_6").send_keys(cups)
-    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/md-tabs/md-tabs-content-wrapper/md-tab-content/div[1]/md-card/div[1]/form/div[4]/button').click()
-    time.sleep(10)
-    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/md-tabs/md-tabs-content-wrapper/md-tab-content/div[1]/md-content/md-card/md-toolbar/div[1]/button[1]').click()
-
-    info = get_soup_info(driver)
-
-    # Close driver
-    driver.quit()
-
-    return info
-
 def webscraping_chrome_candelas(cups):
 
+    print("aa",cups)
     path_driver = os.getcwd() + "\..\webscraping\chromedriver-win64\chromedriver.exe"
     print(path_driver)
     # Create driver Chrome
@@ -115,4 +83,3 @@ def webscraping_chrome_candelas(cups):
 
     return info
 
-#print(webscraping_chrome_candelas("ES0022000006250162PZ1P"))
