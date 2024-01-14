@@ -5,6 +5,7 @@ from flask_cors import CORS, cross_origin
 import signal
 import threading
 from queue import Queue
+import requests
 from cerberus import Validator
 from werkzeug.serving import make_server
 
@@ -43,6 +44,7 @@ def home():
    return "API ws-candela"
 
 @app.route('/shutdown', methods=['POST'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def shutdown():
     if request.method == 'POST':
         print("Deteniendo la aplicación...")
@@ -80,7 +82,7 @@ def calcule_energy_consumption():
             return {"info": info, 'record': record}
         else:
             return {'error': f'Data is invalid {validator.errors}'}
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         return {'error': str(e)}
 
 if __name__ == '__main__':
