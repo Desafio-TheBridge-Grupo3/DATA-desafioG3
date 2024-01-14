@@ -72,7 +72,7 @@ CREATE TABLE cia_pow_several (
 );
 
 
-CREATE TABLE prize (
+CREATE TABLE price (
     id SERIAL PRIMARY KEY NOT NULL,
     con_P1 FLOAT NULL,
     con_P2 FLOAT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE cia_client (
     tax FLOAT NULL,
     other_tax FLOAT NULL,
     maintenance FLOAT NULL,
-    id_prize INTEGER NULL
+    id_price INTEGER NULL
 );
 
 CREATE TABLE consumption (
@@ -187,9 +187,9 @@ REFERENCES cia_client(id);
 
 -- CIA Client
 ALTER TABLE cia_client
-ADD CONSTRAINT fk_cia_client_prize
-FOREIGN KEY (id_prize)
-REFERENCES prize(id);
+ADD CONSTRAINT fk_cia_client_price
+FOREIGN KEY (id_price)
+REFERENCES price(id);
 
 -- CONSUMPTION CONSTRAINT
 ALTER TABLE consumption

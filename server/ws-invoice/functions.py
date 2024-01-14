@@ -1,0 +1,172 @@
+import cv2 as cv
+import easyocr
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+
+import fitz
+from langchain.chains import AnalyzeDocumentChain
+from langchain.chat_models import ChatOpenAI
+from langchain.chains.question_answering import load_qa_chain
+
+import time
+import re
+import copy
+from dotenv import load_dotenv
+import os
+
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+def create_qa_chain(): 
+    llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=OPENAI_API_KEY)
+    qa_chain = load_qa_chain(llm, chain_type="map_reduce")
+    qa_document_chain = AnalyzeDocumentChain(combine_docs_chain=qa_chain)
+
+    return qa_document_chain
+
+def extract_text_from_pdf(pdf):
+    try:
+        doc = fitz.open(stream=pdf.read(), filetype="pdf")
+        full_text = ""
+
+        for page_num in range(doc.page_count - 1):
+            page = doc[page_num]
+            page_text = page.get_text()
+            full_text += page_text
+
+        # Guardar el PDF
+        with open('data/pdf/invoice.pdf', 'wb') as output_pdf:
+            pdf.seek(0)  # Regresar al inicio del archivo antes de escribir
+            output_pdf.write(pdf.read())
+
+        doc.close()
+
+        return full_text
+    except Exception as e:
+        return str(e)
+
+def save_text_to_txt(text, txt_path):
+    if os.path.exists(os.path.dirname(txt_path)):
+        try:
+            with open(txt_path, 'w', encoding='utf-8') as txt_file:
+                txt_file.write(text)
+            print(f'Archivo guardado exitosamente en: {txt_path}')
+        except Exception as e:
+            print(f'Error al guardar el archivo: {e}')
+    else:
+        print(f'La ruta especificada no existe: {os.path.dirname(txt_path)}')
+
+def response_question_langchain(qa_document_chain, question):
+    fragment_size = 4096
+    all_responses= {"question": [],"response" : [], "error": []}
+    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as file:
+        while True:
+            part = file.read(fragment_size)
+            if not part:
+                break
+            try:
+                response = qa_document_chain.run(
+                    input_document=part,
+                    question=question,
+                )
+                all_responses["question"].append(question)
+                all_responses["response"].append(response)
+            except Exception as e:
+                all_responses["error"].append(str(e))
+    all_responses["question"] = all_responses["question"][0]
+    return all_responses
+
+def invoice_clean_data(response):
+    clean_response = copy.deepcopy(response)
+    float_patron = r'\b\d+[.,]\d+\b'
+    not_answer = ["lo siento","no se", "no puedo", "no se menciona"]
+    for i,r in enumerate(response["response"]):
+        if any(word.lower() in r.lower() for word in not_answer):
+            clean_response["response"][i] = " "
+        else:
+            result = re.findall(float_patron,r)
+            clean_response["response"][i] = result
+    return clean_response
+
+def upload_pdf(pdf_data):
+    try:
+        
+        path_txt = "data\\txt\\invoice.txt"
+
+        # read PDF
+        print(pdf_data)
+        pdf_txt = extract_text_from_pdf(pdf_data)
+        save_text_to_txt(pdf_txt, path_txt)
+
+        return {'response': "Se ha subido correctamente el pdf"}
+    except Exception as e:
+        return {'error': f"Error al subir el pdf: {str(e)}"}
+    
+def extract_link():
+    doc = fitz.open('data/pdf/invoice.pdf')
+    
+    for pages_num in range(doc.page_count):
+        page = doc[pages_num]
+        enlaces = page.get_links()
+
+        for enlace in enlaces:
+            url = enlace.get('uri')
+            if url:
+                return url
+
+    doc.close()
+
+def extract_cups(link):
+
+    cups_pattern = re.compile(r'cups=[A-Z0-9]+')
+    matches = cups_pattern.findall(link)
+
+    cleaned_matches = [''.join(match.split()) for match in matches]
+
+    return cleaned_matches[0][5:]
+
+def extract_info_ws_cnvm(link_cnmc):
+
+    info_cnmc = {
+        "cups20": [],
+        "start_date" : [],
+        "end_date": [],
+        "invoice_date": [],
+        "consumption_total": [],
+        "llane_consumption": [],
+        "peak_consumption": [],
+        "valley_consumption": []
+    }
+
+    path_driver = os.getcwd() + "\chromedriver-win64\chromedriver.exe"
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+
+    servicio = Service(path_driver)
+    driver = webdriver.Chrome(service=servicio, options=chrome_options)
+    driver.get(link_cnmc)
+    time.sleep(3)
+    
+    info_cnmc["start_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[1]/span[2]').text
+    info_cnmc["end_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[2]/span[2]').text
+    info_cnmc["invoice_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[3]/span[2]').text
+    info_cnmc["consumption_total"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[7]/span[2]').text
+    info_cnmc["llane_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[9]/span[2]').text
+    info_cnmc["peak_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[8]/span[2]').text
+    info_cnmc["valley_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[10]/span[2]').text
+
+    return info_cnmc
+
+def prizes_invoice():
+    patron = re.compile(r'\b\d+\,\d{6}\b')
+    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as txt_file:
+        txt_file = txt_file.read()
+
+    matches = patron.findall(txt_file)
+
+    cleaned_matches = [''.join(match.split()) for match in matches]
+
+    return cleaned_matches   
