@@ -37,9 +37,8 @@ def extract_text_from_pdf(pdf):
             page_text = page.get_text()
             full_text += page_text
 
-        # Guardar el PDF
         with open('data/pdf/invoice.pdf', 'wb') as output_pdf:
-            pdf.seek(0)  # Regresar al inicio del archivo antes de escribir
+            pdf.seek(0)
             output_pdf.write(pdf.read())
 
         doc.close()
@@ -116,6 +115,8 @@ def extract_link():
             url = enlace.get('uri')
             if url:
                 return url
+            else:
+                return None
 
     doc.close()
 
@@ -127,6 +128,18 @@ def extract_cups(link):
     cleaned_matches = [''.join(match.split()) for match in matches]
 
     return cleaned_matches[0][5:]
+
+def extract_days():
+    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as file:
+        file_txt = file.read()
+    cups_pattern = re.compile(r'\b\d+\s*(?=\bdías\b)')
+    matches = cups_pattern.findall(file_txt)
+
+    if matches:
+        return matches[0].replace(" ", "")
+    else:
+        return None
+
 
 def extract_info_ws_cnvm(link_cnmc):
 
@@ -148,7 +161,7 @@ def extract_info_ws_cnvm(link_cnmc):
     servicio = Service(path_driver)
     driver = webdriver.Chrome(service=servicio, options=chrome_options)
     driver.get(link_cnmc)
-    time.sleep(3)
+    time.sleep(5)
     
     info_cnmc["start_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[1]/span[2]').text
     info_cnmc["end_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[2]/span[2]').text
@@ -157,6 +170,8 @@ def extract_info_ws_cnvm(link_cnmc):
     info_cnmc["llane_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[9]/span[2]').text
     info_cnmc["peak_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[8]/span[2]').text
     info_cnmc["valley_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[10]/span[2]').text
+    info_cnmc["peak_power"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[11]/span[2]').text
+    info_cnmc["valley_power"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[12]/span[2]').text
 
     return info_cnmc
 
@@ -169,4 +184,28 @@ def prizes_invoice():
 
     cleaned_matches = [''.join(match.split()) for match in matches]
 
-    return cleaned_matches   
+    return cleaned_matches
+
+def image_to_text(res_img):
+
+    try:
+        img_path = "data\\txt\\invoice.txt"
+        save_txt = ""
+
+        temp_name = f"temp_image.png"
+        temp_path = os.path.join("data\\image", temp_name)
+        res_img.save(temp_path)
+
+        img = cv.imread(temp_path)
+        gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        reader = easyocr.Reader(['es'])
+        img_txt = reader.readtext(gray)
+
+        for n in img_txt:
+            save_txt += n[1] + " "
+
+        save_text_to_txt(save_txt, img_path)
+
+        return {'response': "Se ha subido la imagen"}
+    except Exception as e:
+        return {'error': f"Error al subir la imagen: {str(e)}"}
