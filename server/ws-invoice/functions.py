@@ -177,22 +177,45 @@ def extract_link():
 
     doc.close()
 
-def extract_cups(link):
-    """
-    Extract CUPS identifier from a link.
+def extract_link_info(link):
 
-    Args:
-        link (str): The link containing the CUPS identifier.
-
-    Returns:
-        str: The extracted CUPS identifier.
-    """
+    link_info = {}
     cups_pattern = re.compile(r'cups=[A-Z0-9]+')
     matches = cups_pattern.findall(link)
 
     cleaned_matches = [''.join(match.split()) for match in matches]
 
-    return cleaned_matches[0][5:]
+    link_info["cups20"] = cleaned_matches[0][5:]
+    peak_regex = r'pP1=([0-9]+(?:\.[0-9]+)?)'
+    link_info["peak_power"] = re.findall(peak_regex, link)[0].replace("pP1=", "")
+    valley_regex = r'pP2=([0-9]+(?:\.[0-9]+)?)'
+    link_info["valley_power"] = re.findall(valley_regex, link)[0].replace("pP2=", "")
+    sd_regex = r'iniF=([0-9]{4}-[0-9]{2}-[0-9]{2})'
+    link_info["start_date"] = re.findall(sd_regex, link)[0].replace("iniF=", "")
+    ed_regex = r'finF=([0-9]{4}-[0-9]{2}-[0-9]{2})'
+    link_info["end_date"] = re.findall(ed_regex, link)[0].replace("finF=", "") 
+    id_regex = r'fFact=([0-9]{4}-[0-9]{2}-[0-9]{2})'
+    link_info["invoice_date"] = re.findall(id_regex, link)[0].replace("fFact=", "")
+
+    return link_info
+
+def extract_info_txt(link):
+    """
+    Extract the number of days and iva from a text file.
+
+    Returns:
+        dict: The extracted number of days or None if no match is found and iva or None.
+    """
+    info={}
+    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as file:
+        file_txt = file.read()
+
+    cups_pattern = re.compile(r'\b\d+\s*(?=\bdías\b)')
+    info["days_invoice"] = cups_pattern.findall(file_txt)[0].replace(" ", "")
+    percentage_pattern = r'\b(\d+(?:[.,]\d+)?)%\b'
+    info["iva"] = re.findall(percentage_pattern, file_txt)[0].replace(",", ".")
+
+    return info
 
 def extract_days():
     """
@@ -210,50 +233,6 @@ def extract_days():
         return matches[0].replace(" ", "")
     else:
         return None
-
-def extract_info_ws_cnvm(link_cnmc):
-    """
-    Extract information from a CNMC (Comisión Nacional de los Mercados y la Competencia) web page.
-
-    Args:
-        link_cnmc (str): The URL of the CNMC web page.
-
-    Returns:
-        dict: Extracted information including start_date, end_date, invoice_date, consumption_total,
-              llane_consumption, peak_consumption, valley_consumption, peak_power, valley_power.
-    """
-
-    info_cnmc = {
-        "cups20": [],
-        "start_date" : [],
-        "end_date": [],
-        "invoice_date": [],
-        "consumption_total": [],
-        "llane_consumption": [],
-        "peak_consumption": [],
-        "valley_consumption": []
-    }
-
-    path_driver = os.getcwd() + "\chromedriver-win64\chromedriver.exe"
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-
-    servicio = Service(path_driver)
-    driver = webdriver.Chrome(service=servicio, options=chrome_options)
-    driver.get(link_cnmc)
-    time.sleep(6)
-
-    info_cnmc["start_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[1]/span[2]').text
-    info_cnmc["end_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[2]/span[2]').text
-    info_cnmc["invoice_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[3]/span[2]').text
-    info_cnmc["consumption_total"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[7]/span[2]').text
-    info_cnmc["llane_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[9]/span[2]').text
-    info_cnmc["peak_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[8]/span[2]').text
-    info_cnmc["valley_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[10]/span[2]').text
-    info_cnmc["peak_power"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[11]/span[2]').text
-    info_cnmc["valley_power"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[12]/span[2]').text
-
-    return info_cnmc
 
 def image_to_text(res_img):
     """

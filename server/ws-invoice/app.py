@@ -12,12 +12,12 @@ import os
 import functions
 
 app = Flask(__name__)
+CORS(app)
 app.config["DEBUG"] = True
 limiter = Limiter(
     app,
     default_limits=["1000 per day", "50 per hour"]
 )
-CORS(app)
 
 @app.after_request
 def after_request(response):
@@ -30,7 +30,7 @@ def after_request(response):
         object: The modified HTTP response object.
     """
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-    response.headers.add('Access-Comtrol-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
 @app.route('/', methods=['GET'])
@@ -49,7 +49,7 @@ def load_pdf():
         dict: JSON response containing extracted information from the uploaded file.
     """
     file = request.files['file_data']
-    info_cnmc = {}
+    info_link = {}
 
     name_file = file.filename
     _, extension = os.path.splitext(name_file)
@@ -64,22 +64,10 @@ def load_pdf():
         response = functions.image_to_text(img_file)
 
     if response:
-        link_cnmc=""
-        response_langchain = []
-        qa_document_chain = functions.create_qa_chain()
+    
         link_cnmc = functions.extract_link()
         if link_cnmc:
-            info_cnmc = functions.extract_info_ws_cnvm(link_cnmc)
-            info_cnmc["cups20"] = functions.extract_cups(link_cnmc)
-            # promps = [
-            #         "Dame el precio de Potencia Punta en €",
-            #         "Dame el precio de Potencia valle en €",
-            #         "Dame el precio de Potencia llano en €",
-            #         "Dame los dias facturados"
-            #         ]
-            # for p in promps:
-            #     qa_doc_response = functions.response_question_langchain(qa_document_chain,p)
-            #     response_langchain.append(functions.invoice_clean_data(qa_doc_response))
+            info_link = functions.extract_link_info(link_cnmc)
         
         measured,cleaned_matches = functions.prices_invoice()
         df = functions.df_create(measured, cleaned_matches)
@@ -88,16 +76,12 @@ def load_pdf():
         functions.p_counter_kW=0
         functions.p_counter_kWh=0
 
-        
-    if info_cnmc:
-        all_info = {"info_cnmc": info_cnmc,
-                    #"info-openai": response_langchain,
-                    "days_rating": functions.extract_days(),
+    if info_link:
+        all_info = {"info_cnmc": info_link,
                     "prices": price}
         
     else:
         all_info = {"info_cnmc": "",
-                    "days_rating": functions.extract_days(),
                     "prices": price}
 
     return {"info": all_info}
