@@ -20,7 +20,6 @@ os.chdir(os.path.dirname(__file__))
 
 from webscraping import ws_app
 
-
 queue_info = Queue()
 
 app = Flask(__name__)
@@ -33,6 +32,14 @@ CORS(app)
 
 @app.after_request
 def after_request(response):
+    """
+    A decorator to add headers to the HTTP response for enabling Cross-Origin Resource Sharing (CORS).
+    Args:
+        response (object): The HTTP response object.
+
+    Returns:
+        object: The modified HTTP response object.
+    """
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
     response.headers.add('Access-Comtrol-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
@@ -46,6 +53,14 @@ def home():
 @app.route('/shutdown', methods=['POST'])
 @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def shutdown():
+    """
+    Endpoint for shutting down the Flask server gracefully.
+
+    This route expects a POST request to initiate the shutdown process.
+
+    Returns:
+        object: JSON response indicating the server shutdown status.
+    """
     if request.method == 'POST':
         print("Deteniendo la aplicación...")
         os.kill(os.getpid(), signal.SIGINT)
@@ -54,6 +69,14 @@ def shutdown():
         return jsonify(error="Invalid request method"), 405
 
 def ws_candela(cups):
+    """
+    Perform web scraping for Candela information using the provided CUPS identifier.
+    Args:
+        cups (str): The CUPS (Código Universal del Punto de Suministro) identifier.
+
+    Returns:
+        None: The function puts the scraped information into a queue.
+    """
     try:
         info = ws_app.webscraping_chrome_candelas(cups)
         queue_info.put(info)
@@ -64,7 +87,12 @@ def ws_candela(cups):
 @limiter.limit("10 per minute")
 @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def calcule_energy_consumption():
-    
+    """
+    Endpoint for calculating energy consumption based on a CUPS identifier.
+
+    Returns:
+        dict: JSON response containing information about the energy consumption calculation.
+    """
     schema = {
     'cups20': {'type': 'string', 'minlength': 20, 'maxlength': 22},
     }

@@ -20,7 +20,13 @@ os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-def create_qa_chain(): 
+def create_qa_chain():
+    """
+    Create a question-answering chain using the ChatOpenAI model and a map-reduce chain.
+
+    Returns:
+        AnalyzeDocumentChain: A question-answering document chain.
+    """
     llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=OPENAI_API_KEY)
     qa_chain = load_qa_chain(llm, chain_type="map_reduce")
     qa_document_chain = AnalyzeDocumentChain(combine_docs_chain=qa_chain)
@@ -28,6 +34,15 @@ def create_qa_chain():
     return qa_document_chain
 
 def extract_text_from_pdf(pdf):
+    """
+    Extract text content from a PDF file.
+
+    Args:
+        pdf (file-like object): PDF file object.
+
+    Returns:
+        str: Extracted text content from the PDF.
+    """
     try:
         doc = fitz.open(stream=pdf.read(), filetype="pdf")
         full_text = ""
@@ -48,6 +63,16 @@ def extract_text_from_pdf(pdf):
         return str(e)
 
 def save_text_to_txt(text, txt_path):
+    """
+    Save text content to a text file.
+
+    Args:
+        text (str): Text content to be saved.
+        txt_path (str): Path to the text file.
+
+    Returns:
+        None
+    """
     if os.path.exists(os.path.dirname(txt_path)):
         try:
             with open(txt_path, 'w', encoding='utf-8') as txt_file:
@@ -59,6 +84,16 @@ def save_text_to_txt(text, txt_path):
         print(f'La ruta especificada no existe: {os.path.dirname(txt_path)}')
 
 def response_question_langchain(qa_document_chain, question):
+    """
+    Get responses to a question from a question-answering document chain.
+
+    Args:
+        qa_document_chain (AnalyzeDocumentChain): Question-answering document chain.
+        question (str): The question to be answered.
+
+    Returns:
+        dict: A dictionary containing the question, responses, and any errors.
+    """
     fragment_size = 4096
     all_responses= {"question": [],"response" : [], "error": []}
     with open("data/txt/invoice.txt", 'r', encoding='utf-8') as file:
@@ -79,6 +114,15 @@ def response_question_langchain(qa_document_chain, question):
     return all_responses
 
 def invoice_clean_data(response):
+    """
+    Clean and process responses obtained from a question-answering task.
+
+    Args:
+        response (dict): Original responses containing question, responses, and errors.
+
+    Returns:
+        dict: Cleaned responses with irrelevant answers replaced and numeric values extracted.
+    """
     clean_response = copy.deepcopy(response)
     float_patron = r'\b\d+[.,]\d+\b'
     not_answer = ["lo siento","no se", "no puedo", "no se menciona"]
@@ -91,6 +135,15 @@ def invoice_clean_data(response):
     return clean_response
 
 def upload_pdf(pdf_data):
+    """
+    Upload a PDF file, extract text, and save it to a text file.
+
+    Args:
+        pdf_data (file-like object): PDF file object.
+
+    Returns:
+        dict: Response indicating the success or failure of the operation.
+    """
     try:
 
         path_txt = "data\\txt\\invoice.txt"
@@ -105,6 +158,12 @@ def upload_pdf(pdf_data):
         return {'error': f"Error al subir el pdf: {str(e)}"}
     
 def extract_link():
+    """
+    Extract a link (URL) from a PDF file.
+
+    Returns:
+        str or None: The extracted link or None if no link is found.
+    """
     doc = fitz.open('data/pdf/invoice.pdf')
 
     for pages_num in range(doc.page_count):
@@ -121,7 +180,15 @@ def extract_link():
     doc.close()
 
 def extract_cups(link):
+    """
+    Extract CUPS identifier from a link.
 
+    Args:
+        link (str): The link containing the CUPS identifier.
+
+    Returns:
+        str: The extracted CUPS identifier.
+    """
     cups_pattern = re.compile(r'cups=[A-Z0-9]+')
     matches = cups_pattern.findall(link)
 
@@ -130,6 +197,12 @@ def extract_cups(link):
     return cleaned_matches[0][5:]
 
 def extract_days():
+    """
+    Extract the number of days from a text file.
+
+    Returns:
+        str or None: The extracted number of days or None if no match is found.
+    """
     with open("data/txt/invoice.txt", 'r', encoding='utf-8') as file:
         file_txt = file.read()
     cups_pattern = re.compile(r'\b\d+\s*(?=\bdías\b)')
@@ -141,6 +214,16 @@ def extract_days():
         return None
 
 def extract_info_ws_cnvm(link_cnmc):
+    """
+    Extract information from a CNMC (Comisión Nacional de los Mercados y la Competencia) web page.
+
+    Args:
+        link_cnmc (str): The URL of the CNMC web page.
+
+    Returns:
+        dict: Extracted information including start_date, end_date, invoice_date, consumption_total,
+              llane_consumption, peak_consumption, valley_consumption, peak_power, valley_power.
+    """
 
     info_cnmc = {
         "cups20": [],
@@ -175,6 +258,12 @@ def extract_info_ws_cnvm(link_cnmc):
     return info_cnmc
 
 def prizes_invoice():
+    """
+    Extract prizes from a text file.
+
+    Returns:
+        list: A list of extracted prizes.
+    """
     patron = re.compile(r'\b\d+\,\d{6}\b')
     with open("data/txt/invoice.txt", 'r', encoding='utf-8') as txt_file:
         txt_file = txt_file.read()
@@ -186,7 +275,15 @@ def prizes_invoice():
     return cleaned_matches
 
 def image_to_text(res_img):
+    """
+    Convert an image to text using OCR and save the text to a text file.
 
+    Args:
+        res_img: Image data.
+
+    Returns:
+        dict: Response indicating the success or failure of the operation.
+    """
     try:
         img_path = "data\\txt\\invoice.txt"
         save_txt = ""

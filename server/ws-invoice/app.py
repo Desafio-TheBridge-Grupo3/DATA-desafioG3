@@ -21,6 +21,14 @@ CORS(app)
 
 @app.after_request
 def after_request(response):
+    """
+    A decorator to add headers to the HTTP response for enabling Cross-Origin Resource Sharing (CORS).
+    Args:
+        response (object): The HTTP response object.
+
+    Returns:
+        object: The modified HTTP response object.
+    """
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
     response.headers.add('Access-Comtrol-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
@@ -34,7 +42,12 @@ def home():
 @app.route('/invoice', methods=['POST'])
 @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def load_pdf():    
+    """
+    Endpoint for processing and extracting information from PDF or image files.
 
+    Returns:
+        dict: JSON response containing extracted information from the uploaded file.
+    """
     file = request.files['file_data']
 
     name_file = file.filename

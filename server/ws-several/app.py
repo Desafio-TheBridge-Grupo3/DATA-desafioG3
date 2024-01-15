@@ -26,6 +26,14 @@ CORS(app)
 
 @app.after_request
 def after_request(response):
+    """
+    A decorator to add headers to the HTTP response for enabling Cross-Origin Resource Sharing (CORS).
+    Args:
+        response (object): The HTTP response object.
+
+    Returns:
+        object: The modified HTTP response object.
+    """
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
     response.headers.add('Access-Comtrol-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
@@ -40,7 +48,20 @@ def home():
 @limiter.limit("100 per minute")
 @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def filter_info():
+    """
+    Receives a configuration as a JSON payload and filters the database based on the provided criteria.
+    
+    The function validates the input configuration against a predefined JSON schema and,
+    if the validation passes, it establishes a connection to the database using the
+    'my_connection' function from the 'functions' module. It then calls the 'con_filter_info'
+    function to perform the actual filtering in the database and retrieve the prices of tariffs.
+    
+    Args:
+        None (uses request.data): JSON payload containing the filter configuration.
 
+    Returns:
+        dict: A JSON response containing the filtered information or an error message.
+    """
     schema = {
     'cia': {'type': 'string', 'minlength': 1, 'maxlength': 100},
     'zone': {'type': 'string', 'minlength': 1, 'maxlength': 50},
@@ -64,5 +85,5 @@ def filter_info():
         return {'error': str(e)}
     
 if __name__ == '__main__':
-  server = make_server('127.0.0.1', 5002, app)
+  server = make_server('0.0.0.0', 5002, app)
   server.serve_forever()
