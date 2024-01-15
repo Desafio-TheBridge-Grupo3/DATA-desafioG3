@@ -11,7 +11,6 @@ PORT = os.getenv('PORT')
 
 def my_connection():
 
-    print("Conexión exitosa!")
     try:
         conn_string = f"dbname={DATABASE_NAME} user={USER} password={PASSWORD} host={HOST} port={PORT}"
         connection = psycopg2.connect(conn_string)
@@ -86,6 +85,8 @@ def con_filter_info(con, res):
                     "con_price_P5": results[0][4],
                     "con_price_P6": results[0][5]
             }
+        else:
+            result_con = None
 
         query = f"""
             SELECT 
@@ -121,6 +122,8 @@ def con_filter_info(con, res):
                     "pow_price_P5": results[0][4],
                     "pow_price_P6": results[0][5]
             }
+        else:
+            result_pow = None
         result_info = {
             "con_prices": result_con,
             "pow_prices": result_pow
