@@ -15,7 +15,7 @@ def change_zones(zone):
     elif zone == "CANARIAS":
       return "C"
     else:
-      return "C"
+      return "P"
     
 def change_market(m):
     if m == "FIJO":
@@ -66,6 +66,7 @@ def insert_several():
                             "P6.": "con_price_p6"
                             }, inplace=True)
     df_indexed_date["market"] = "INDEXADO"
+    df_indexed_date['indexed_date'] = df_indexed_date['indexed_date'].dt.strftime('%d-%m-%Y')
 
     df_con_sev = pd.concat([df_fixed, df_indexed_date])
     df_con_sev["zone"] = df_con_sev["zone"].apply(change_zones)
