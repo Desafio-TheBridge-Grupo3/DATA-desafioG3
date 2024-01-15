@@ -4,3 +4,4 @@ easyocr==1.7.1
 PyPDF2==3.0.1
 PyMuPDF==1.23.12
 opencv-python==4.8.1.78
+pandas==2.1.1

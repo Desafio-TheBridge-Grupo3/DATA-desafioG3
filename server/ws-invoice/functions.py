@@ -15,10 +15,14 @@ import re
 import copy
 from dotenv import load_dotenv
 import os
+import pandas as pd
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+p_counter_kW=0
+p_counter_kWh=0
 
 def create_qa_chain(): 
     llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=OPENAI_API_KEY)
@@ -174,16 +178,7 @@ def extract_info_ws_cnvm(link_cnmc):
 
     return info_cnmc
 
-def prizes_invoice():
-    patron = re.compile(r'\b\d+\,\d{6}\b')
-    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as txt_file:
-        txt_file = txt_file.read()
 
-    matches = patron.findall(txt_file)
-
-    cleaned_matches = [''.join(match.split()) for match in matches]
-
-    return cleaned_matches
 
 def image_to_text(res_img):
 
@@ -208,3 +203,56 @@ def image_to_text(res_img):
         return {'response': "Se ha subido la imagen"}
     except Exception as e:
         return {'error': f"Error al subir la imagen: {str(e)}"}
+    
+def prices_invoice():
+    patron = re.compile(r'\b\d+\,\d{6}\b')
+    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as txt_file:
+        txt_file = txt_file.read()
+
+    matches = patron.findall(txt_file)
+
+    cleaned_matches = [''.join(match.split()) for match in matches]
+
+    patron = r'€/kWh|€/kW'
+    measured = re.findall(patron, txt_file)
+    return measured,cleaned_matches
+
+def df_create(measured, cleaned_matches):
+    data = {'precios': cleaned_matches, 'unidades': measured}
+    df = pd.DataFrame.from_dict(data, orient='index').transpose()
+    df.dropna(inplace=True)
+    return df
+
+def assign_p_values(df):
+    global p_counter_kW, p_counter_kWh
+    
+    if df['unidades'] == '€/kW':
+        p_counter_kW += 1
+        return f'p{p_counter_kW}'
+    elif df['unidades'] == '€/kWh':
+        p_counter_kWh += 1
+        return f'p{p_counter_kWh}'
+    else:
+        return ''
+
+def json_prices(df):
+    pdf_scarp_info = {
+    "p1_price_kw": [],
+    "p2_price_kw": [],
+    "p3_price_kw": [],
+    "p4_price_kw": [],
+    "p5_price_kw": [],
+    "p6_price_kw": [],
+    "p1_price_kwh": [],
+    "p2_price_kwh": [],
+    "p3_price_kwh": [],
+    "p4_price_kwh": [],
+    "p5_price_kwh": [],
+    "p6_price_kwh": [],
+        }
+
+    for index, row in df.iterrows():
+        price_type = f"{row['P_values']}_price_{row['unidades'][2:].lower()}"
+        pdf_scarp_info[price_type].append(row['precios'])
+    
+    return pdf_scarp_info
