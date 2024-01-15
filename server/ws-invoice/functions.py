@@ -15,18 +15,16 @@ import re
 import copy
 from dotenv import load_dotenv
 import os
+import pandas as pd
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-def create_qa_chain():
-    """
-    Create a question-answering chain using the ChatOpenAI model and a map-reduce chain.
+p_counter_kW=0
+p_counter_kWh=0
 
-    Returns:
-        AnalyzeDocumentChain: A question-answering document chain.
-    """
+def create_qa_chain(): 
     llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=OPENAI_API_KEY)
     qa_chain = load_qa_chain(llm, chain_type="map_reduce")
     qa_document_chain = AnalyzeDocumentChain(combine_docs_chain=qa_chain)
@@ -257,23 +255,6 @@ def extract_info_ws_cnvm(link_cnmc):
 
     return info_cnmc
 
-def prizes_invoice():
-    """
-    Extract prizes from a text file.
-
-    Returns:
-        list: A list of extracted prizes.
-    """
-    patron = re.compile(r'\b\d+\,\d{6}\b')
-    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as txt_file:
-        txt_file = txt_file.read()
-
-    matches = patron.findall(txt_file)
-
-    cleaned_matches = [''.join(match.split()) for match in matches]
-
-    return cleaned_matches
-
 def image_to_text(res_img):
     """
     Convert an image to text using OCR and save the text to a text file.
@@ -305,3 +286,56 @@ def image_to_text(res_img):
         return {'response': "Se ha subido la imagen"}
     except Exception as e:
         return {'error': f"Error al subir la imagen: {str(e)}"}
+    
+def prices_invoice():
+    patron = re.compile(r'\b\d+\,\d{6}\b')
+    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as txt_file:
+        txt_file = txt_file.read()
+
+    matches = patron.findall(txt_file)
+
+    cleaned_matches = [''.join(match.split()) for match in matches]
+
+    patron = r'€/kWh|€/kW'
+    measured = re.findall(patron, txt_file)
+    return measured,cleaned_matches
+
+def df_create(measured, cleaned_matches):
+    data = {'precios': cleaned_matches, 'unidades': measured}
+    df = pd.DataFrame.from_dict(data, orient='index').transpose()
+    df.dropna(inplace=True)
+    return df
+
+def assign_p_values(df):
+    global p_counter_kW, p_counter_kWh
+    
+    if df['unidades'] == '€/kW':
+        p_counter_kW += 1
+        return f'p{p_counter_kW}'
+    elif df['unidades'] == '€/kWh':
+        p_counter_kWh += 1
+        return f'p{p_counter_kWh}'
+    else:
+        return ''
+
+def json_prices(df):
+    pdf_scarp_info = {
+    "p1_price_kw": [],
+    "p2_price_kw": [],
+    "p3_price_kw": [],
+    "p4_price_kw": [],
+    "p5_price_kw": [],
+    "p6_price_kw": [],
+    "p1_price_kwh": [],
+    "p2_price_kwh": [],
+    "p3_price_kwh": [],
+    "p4_price_kwh": [],
+    "p5_price_kwh": [],
+    "p6_price_kwh": [],
+        }
+
+    for index, row in df.iterrows():
+        price_type = f"{row['P_values']}_price_{row['unidades'][2:].lower()}"
+        pdf_scarp_info[price_type].append(row['precios'])
+    
+    return pdf_scarp_info

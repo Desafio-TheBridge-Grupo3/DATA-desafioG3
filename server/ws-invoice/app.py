@@ -49,6 +49,7 @@ def load_pdf():
         dict: JSON response containing extracted information from the uploaded file.
     """
     file = request.files['file_data']
+    info_cnmc = {}
 
     name_file = file.filename
     _, extension = os.path.splitext(name_file)
@@ -63,7 +64,7 @@ def load_pdf():
         response = functions.image_to_text(img_file)
 
     if response:
-    
+        link_cnmc=""
         response_langchain = []
         qa_document_chain = functions.create_qa_chain()
         link_cnmc = functions.extract_link()
@@ -79,12 +80,25 @@ def load_pdf():
             # for p in promps:
             #     qa_doc_response = functions.response_question_langchain(qa_document_chain,p)
             #     response_langchain.append(functions.invoice_clean_data(qa_doc_response))
+        
+        measured,cleaned_matches = functions.prices_invoice()
+        df = functions.df_create(measured, cleaned_matches)
+        df['P_values'] = df.apply(functions.assign_p_values, axis=1)
+        price = functions.json_prices(df)
+        functions.p_counter_kW=0
+        functions.p_counter_kWh=0
 
-        prizes = functions.prizes_invoice()
+        
+    if info_cnmc:
         all_info = {"info_cnmc": info_cnmc,
                     #"info-openai": response_langchain,
                     "days_rating": functions.extract_days(),
-                    "prizes": prizes}
+                    "prices": price}
+        
+    else:
+        all_info = {"info_cnmc": "",
+                    "days_rating": functions.extract_days(),
+                    "prices": price}
 
     return {"info": all_info}
 if __name__ == '__main__':
