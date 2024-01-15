@@ -92,7 +92,7 @@ def invoice_clean_data(response):
 
 def upload_pdf(pdf_data):
     try:
-        
+
         path_txt = "data\\txt\\invoice.txt"
 
         # read PDF
@@ -106,7 +106,7 @@ def upload_pdf(pdf_data):
     
 def extract_link():
     doc = fitz.open('data/pdf/invoice.pdf')
-    
+
     for pages_num in range(doc.page_count):
         page = doc[pages_num]
         enlaces = page.get_links()
@@ -140,7 +140,6 @@ def extract_days():
     else:
         return None
 
-
 def extract_info_ws_cnvm(link_cnmc):
 
     info_cnmc = {
@@ -161,8 +160,8 @@ def extract_info_ws_cnvm(link_cnmc):
     servicio = Service(path_driver)
     driver = webdriver.Chrome(service=servicio, options=chrome_options)
     driver.get(link_cnmc)
-    time.sleep(5)
-    
+    time.sleep(6)
+
     info_cnmc["start_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[1]/span[2]').text
     info_cnmc["end_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[2]/span[2]').text
     info_cnmc["invoice_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[3]/span[2]').text
