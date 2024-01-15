@@ -45,7 +45,7 @@ def load_pdf():
         pdf_data_base64 = request.files['file_data']
         response = functions.upload_pdf(pdf_data_base64)
 
-    elif extension.lower() == ".png":
+    elif extension.lower() == ".png" or extension.lower() == ".jpeg" or extension.lower() == ".jpg":
         img_file = request.files['file_data']
         response = functions.image_to_text(img_file)
 
