@@ -25,9 +25,11 @@ Una vez analizadas las necesidades de la WebApp para solucionar los problemas ac
 ### Estructura
 
 [![!Estructura](/aux_temp/Esquema.png)](https://www.canva.com/design/DAF5e_nv_Bk/PNXGmx8l0Xajcoh2LPONFQ/edit?utm_content=DAF5e_nv_Bk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+<span style="font-size: small; color: gray;">Click en la imágen para ampliar</span>
 
 ### Relación
 [![Relación](/aux_temp/Diagrama.png)](https://www.canva.com/design/DAFy6dl3Pe4/yYekcQiBpDDn7MCyx_-qiw/edit?utm_content=DAFy6dl3Pe4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+<span style="font-size: small; color: gray;">Click en la imágen para ampliar</span>
 # Automatización de extracción de Datos.
 
 El flujo del trabajo manual del asesor actual tiene dos tareas penosas en tiempo que son candidatas a ser substituidas por automatismos.
