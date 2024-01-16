@@ -14,12 +14,16 @@ Nuestra colaboración se enfocó en abordar el problema planteado, realizar un a
 - [`/Database`](/database/README.md): Carpeta de todo lo relacionado con la creación y actualización de la BBDD.
 - [`/Machine Learning`](/MachineLearning/README.md): Código fuente y modelos de machine learning desarrollados para abordar el problema específico.
 - [`/Server`](/server/README.md): Implementación y documentación de las APIs desarrolladas para la comunicación entre la aplicación web y el backend.
+- [`/Streamlit`](/streamlit/app.py): WebApp de demostración de las API de scrapeo desarrolladas.
+- [`/Memoria Técnica`](/Memoria_Técnica.md): Memoria técnica de los procesos realizados a lo largo del proyecto.
+
+
 
 
 ## Colaboradores
 
-- [Javier de Alcázar](enlace al perfil de GitHub)
-- [Maria Neches](enlace al perfil de GitHub)
-- [Alejandro Campos](enlace al perfil de GitHub)
-- [Hugo Martín-Santos](enlace al perfil de GitHub)
+- [Javier de Alcázar](https://github.com/Alkaeee)
+- [Maria Neches](https://github.com/marianeches)
+- [Alejandro Campos](https://github.com/protonaco)
+- [Hugo Martín-Santos](https://github.com/hmsgrs)
 
