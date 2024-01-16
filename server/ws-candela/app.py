@@ -100,7 +100,8 @@ def calcule_energy_consumption():
     validator = Validator(schema)
 
     try:
-        record = json.loads(request.data)
+        record = request.get_json()
+        print("data = ",record)
         if validator.validate(record):
             for c in record:
                 cups = record["cups20"]
