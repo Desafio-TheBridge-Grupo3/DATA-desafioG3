@@ -21,7 +21,7 @@ La tarea de suplantar el trabajo realizado por una hoja excel con una WebApp pla
 # BBDD SQL
 
 Una vez analizadas las necesidades de la WebApp para solucionar los problemas actuales, se diseña la BBDD que cumpla las funciones necesarias para el proyecto.
-Se trata de una BBDD PostreSQL 15.0, preparada para alojarse en la nube Azure. Tiene 12 entidades y 5 relaciones. [Link a la query de creación](database\sql\create_tables.sql)
+Se trata de una BBDD PostreSQL 15.0, preparada para alojarse en la nube Azure. Tiene 12 entidades y 5 relaciones. [Link a la query de creación](database/sql/create_tables.sql)
 ### Estructura
 
 [![!Estructura](/aux_temp/Esquema.png)](https://www.canva.com/design/DAF5e_nv_Bk/PNXGmx8l0Xajcoh2LPONFQ/edit?utm_content=DAF5e_nv_Bk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
