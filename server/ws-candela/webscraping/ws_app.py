@@ -5,9 +5,24 @@ from selenium.webdriver.chrome.service import Service
 import os
 
 import time
-from .variables import URL, USER, PASSWORD
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+URL =  os.getenv("URL")
+USER =  os.getenv("USER")
+PASSWORD =  os.getenv("PASSWORD")
 
 def get_soup_info(driver):
+    """
+    Extract information from a web page using Selenium WebDriver.
+
+    Args:
+        driver: Selenium WebDriver instance.
+
+    Returns:
+        dict: Extracted information for candelas web.
+    """
     candela_info = {
         "rate": [],
         "anual_consumption": [],
@@ -43,42 +58,57 @@ def get_soup_info(driver):
     return candela_info
 
 def webscraping_chrome_candelas(cups):
+    """
+    Perform web scraping on the Candela website to retrieve information.
 
-    path_driver = os.getcwd() + "\webscraping\chromedriver-win64\chromedriver.exe"
-    print(path_driver)
-    # Create driver Chrome
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    Args:
+        cups (str): The CUPS identifier.
 
-    servicio = Service(path_driver)
-    driver = webdriver.Chrome(service=servicio, options=chrome_options)
-    driver.get(URL)
-    assert "Candela"
-    time.sleep(3)
+    Returns:
+        dict: Extracted information including rate, annual_consumption, annual_consumption_p1,
+              annual_consumption_p2, annual_consumption_p3, annual_consumption_p4,
+              annual_consumption_p5, annual_consumption_p6, annual_power_p1,
+              annual_power_p2, annual_power_p3, annual_power_p4, annual_power_p5,
+              annual_power_p6.
+    """
+    try:
+        path_driver = os.getcwd() + "\webscraping\chromedriver-win64\chromedriver.exe"
+        # Create driver Chrome
+        chrome_options = Options()
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--headless")
 
-    # Login in candelas web
+        service = Service(path_driver)
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+        driver.get(URL)
+        assert "Candela"
+        time.sleep(5)
 
-    driver.find_element(By.ID, "select_1").click()
-    time.sleep(1)
-    driver.find_element(By.ID, "select_option_3").click()
-    driver.find_element(By.NAME, "usuario").send_keys(USER)
-    driver.find_element(By.NAME, "password").send_keys(PASSWORD)
-    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/form/button').click()
-    time.sleep(3)
+        # Login in candelas web
 
-    # Download info
+        driver.find_element(By.ID, "select_1").click()
+        time.sleep(2)
+        driver.find_element(By.ID, "select_option_3").click()
+        driver.find_element(By.NAME, "usuario").send_keys(USER)
+        driver.find_element(By.NAME, "password").send_keys(PASSWORD)
+        driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/form/button').click()
+        time.sleep(10)
 
-    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[1]/ul/li[3]/a').click()
-    time.sleep(1)
-    driver.find_element(By.ID, "input_6").send_keys(cups)
-    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/md-tabs/md-tabs-content-wrapper/md-tab-content/div[1]/md-card/div[1]/form/div[4]/button').click()
-    time.sleep(10)
-    driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/md-tabs/md-tabs-content-wrapper/md-tab-content/div[1]/md-content/md-card/md-toolbar/div[1]/button[1]').click()
+        # Download info
 
-    info = get_soup_info(driver)
+        driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[1]/ul/li[3]/a').click()
+        time.sleep(1)
+        driver.find_element(By.ID, "input_6").send_keys(cups)
+        driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/md-tabs/md-tabs-content-wrapper/md-tab-content/div[1]/md-card/div[1]/form/div[4]/button').click()
+        time.sleep(10)
+        driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[2]/md-tabs/md-tabs-content-wrapper/md-tab-content/div[1]/md-content/md-card/md-toolbar/div[1]/button[1]').click()
 
-    # Close driver
-    driver.quit()
+        info = get_soup_info(driver)
 
-    return info
+        # Close driver
+        driver.quit()
+        return info
+    except Exception as e:
+        return {"error": str(e)}
+
 

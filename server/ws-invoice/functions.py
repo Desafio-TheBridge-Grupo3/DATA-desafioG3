@@ -15,10 +15,14 @@ import re
 import copy
 from dotenv import load_dotenv
 import os
+import pandas as pd
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+p_counter_kW=0
+p_counter_kWh=0
 
 def create_qa_chain(): 
     llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=OPENAI_API_KEY)
@@ -28,6 +32,15 @@ def create_qa_chain():
     return qa_document_chain
 
 def extract_text_from_pdf(pdf):
+    """
+    Extract text content from a PDF file.
+
+    Args:
+        pdf (file-like object): PDF file object.
+
+    Returns:
+        str: Extracted text content from the PDF.
+    """
     try:
         doc = fitz.open(stream=pdf.read(), filetype="pdf")
         full_text = ""
@@ -48,6 +61,16 @@ def extract_text_from_pdf(pdf):
         return str(e)
 
 def save_text_to_txt(text, txt_path):
+    """
+    Save text content to a text file.
+
+    Args:
+        text (str): Text content to be saved.
+        txt_path (str): Path to the text file.
+
+    Returns:
+        None
+    """
     if os.path.exists(os.path.dirname(txt_path)):
         try:
             with open(txt_path, 'w', encoding='utf-8') as txt_file:
@@ -59,6 +82,16 @@ def save_text_to_txt(text, txt_path):
         print(f'La ruta especificada no existe: {os.path.dirname(txt_path)}')
 
 def response_question_langchain(qa_document_chain, question):
+    """
+    Get responses to a question from a question-answering document chain.
+
+    Args:
+        qa_document_chain (AnalyzeDocumentChain): Question-answering document chain.
+        question (str): The question to be answered.
+
+    Returns:
+        dict: A dictionary containing the question, responses, and any errors.
+    """
     fragment_size = 4096
     all_responses= {"question": [],"response" : [], "error": []}
     with open("data/txt/invoice.txt", 'r', encoding='utf-8') as file:
@@ -79,6 +112,15 @@ def response_question_langchain(qa_document_chain, question):
     return all_responses
 
 def invoice_clean_data(response):
+    """
+    Clean and process responses obtained from a question-answering task.
+
+    Args:
+        response (dict): Original responses containing question, responses, and errors.
+
+    Returns:
+        dict: Cleaned responses with irrelevant answers replaced and numeric values extracted.
+    """
     clean_response = copy.deepcopy(response)
     float_patron = r'\b\d+[.,]\d+\b'
     not_answer = ["lo siento","no se", "no puedo", "no se menciona"]
@@ -91,6 +133,15 @@ def invoice_clean_data(response):
     return clean_response
 
 def upload_pdf(pdf_data):
+    """
+    Upload a PDF file, extract text, and save it to a text file.
+
+    Args:
+        pdf_data (file-like object): PDF file object.
+
+    Returns:
+        dict: Response indicating the success or failure of the operation.
+    """
     try:
 
         path_txt = "data\\txt\\invoice.txt"
@@ -105,6 +156,12 @@ def upload_pdf(pdf_data):
         return {'error': f"Error al subir el pdf: {str(e)}"}
     
 def extract_link():
+    """
+    Extract a link (URL) from a PDF file.
+
+    Returns:
+        str or None: The extracted link or None if no link is found.
+    """
     doc = fitz.open('data/pdf/invoice.pdf')
 
     for pages_num in range(doc.page_count):
@@ -120,16 +177,55 @@ def extract_link():
 
     doc.close()
 
-def extract_cups(link):
+def extract_link_info(link):
 
+    link_info = {}
     cups_pattern = re.compile(r'cups=[A-Z0-9]+')
     matches = cups_pattern.findall(link)
 
     cleaned_matches = [''.join(match.split()) for match in matches]
 
-    return cleaned_matches[0][5:]
+    link_info["cups20"] = cleaned_matches[0][5:]
+    peak_regex = r'pP1=([0-9]+(?:\.[0-9]+)?)'
+    link_info["peak_power"] = re.findall(peak_regex, link)[0].replace("pP1=", "")
+    valley_regex = r'pP2=([0-9]+(?:\.[0-9]+)?)'
+    link_info["valley_power"] = re.findall(valley_regex, link)[0].replace("pP2=", "")
+    flat_regex = r'pP3=([0-9]+(?:\.[0-9]+)?)'
+    link_info["flat_power"] = re.findall(flat_regex, link)[0].replace("pP3=", "")
+    sd_regex = r'iniF=([0-9]{4}-[0-9]{2}-[0-9]{2})'
+    link_info["start_date"] = re.findall(sd_regex, link)[0].replace("iniF=", "")
+    ed_regex = r'finF=([0-9]{4}-[0-9]{2}-[0-9]{2})'
+    link_info["end_date"] = re.findall(ed_regex, link)[0].replace("finF=", "") 
+    id_regex = r'fFact=([0-9]{4}-[0-9]{2}-[0-9]{2})'
+    link_info["invoice_date"] = re.findall(id_regex, link)[0].replace("fFact=", "")
+
+    return link_info
+
+def extract_info_txt(link):
+    """
+    Extract the number of days and iva from a text file.
+
+    Returns:
+        dict: The extracted number of days or None if no match is found and iva or None.
+    """
+    info={}
+    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as file:
+        file_txt = file.read()
+
+    cups_pattern = re.compile(r'\b\d+\s*(?=\bdías\b)')
+    info["days_invoice"] = cups_pattern.findall(file_txt)[0].replace(" ", "")
+    percentage_pattern = r'\b(\d+(?:[.,]\d+)?)%\b'
+    info["iva"] = re.findall(percentage_pattern, file_txt)[0].replace(",", ".")
+
+    return info
 
 def extract_days():
+    """
+    Extract the number of days from a text file.
+
+    Returns:
+        str or None: The extracted number of days or None if no match is found.
+    """
     with open("data/txt/invoice.txt", 'r', encoding='utf-8') as file:
         file_txt = file.read()
     cups_pattern = re.compile(r'\b\d+\s*(?=\bdías\b)')
@@ -140,53 +236,16 @@ def extract_days():
     else:
         return None
 
-def extract_info_ws_cnvm(link_cnmc):
-
-    info_cnmc = {
-        "cups20": [],
-        "start_date" : [],
-        "end_date": [],
-        "invoice_date": [],
-        "consumption_total": [],
-        "llane_consumption": [],
-        "peak_consumption": [],
-        "valley_consumption": []
-    }
-
-    path_driver = os.getcwd() + "\chromedriver-win64\chromedriver.exe"
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-
-    servicio = Service(path_driver)
-    driver = webdriver.Chrome(service=servicio, options=chrome_options)
-    driver.get(link_cnmc)
-    time.sleep(6)
-
-    info_cnmc["start_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[1]/span[2]').text
-    info_cnmc["end_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[2]/span[2]').text
-    info_cnmc["invoice_date"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[3]/span[2]').text
-    info_cnmc["consumption_total"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[7]/span[2]').text
-    info_cnmc["llane_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[9]/span[2]').text
-    info_cnmc["peak_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[8]/span[2]').text
-    info_cnmc["valley_consumption"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[10]/span[2]').text
-    info_cnmc["peak_power"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[11]/span[2]').text
-    info_cnmc["valley_power"] = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div[1]/div[2]/main/div[1]/section/div[1]/div[1]/div[1]/div[12]/span[2]').text
-
-    return info_cnmc
-
-def prizes_invoice():
-    patron = re.compile(r'\b\d+\,\d{6}\b')
-    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as txt_file:
-        txt_file = txt_file.read()
-
-    matches = patron.findall(txt_file)
-
-    cleaned_matches = [''.join(match.split()) for match in matches]
-
-    return cleaned_matches
-
 def image_to_text(res_img):
+    """
+    Convert an image to text using OCR and save the text to a text file.
 
+    Args:
+        res_img: Image data.
+
+    Returns:
+        dict: Response indicating the success or failure of the operation.
+    """
     try:
         img_path = "data\\txt\\invoice.txt"
         save_txt = ""
@@ -208,3 +267,56 @@ def image_to_text(res_img):
         return {'response': "Se ha subido la imagen"}
     except Exception as e:
         return {'error': f"Error al subir la imagen: {str(e)}"}
+    
+def prices_invoice():
+    patron = re.compile(r'\b\d+\,\d{6}\b')
+    with open("data/txt/invoice.txt", 'r', encoding='utf-8') as txt_file:
+        txt_file = txt_file.read()
+
+    matches = patron.findall(txt_file)
+
+    cleaned_matches = [''.join(match.split()) for match in matches]
+
+    patron = r'€/kWh|€/kW'
+    measured = re.findall(patron, txt_file)
+    return measured,cleaned_matches
+
+def df_create(measured, cleaned_matches):
+    data = {'precios': cleaned_matches, 'unidades': measured}
+    df = pd.DataFrame.from_dict(data, orient='index').transpose()
+    df.dropna(inplace=True)
+    return df
+
+def assign_p_values(df):
+    global p_counter_kW, p_counter_kWh
+    
+    if df['unidades'] == '€/kW':
+        p_counter_kW += 1
+        return f'p{p_counter_kW}'
+    elif df['unidades'] == '€/kWh':
+        p_counter_kWh += 1
+        return f'p{p_counter_kWh}'
+    else:
+        return ''
+
+def json_prices(df):
+    pdf_scarp_info = {
+    "p1_price_kw": [],
+    "p2_price_kw": [],
+    "p3_price_kw": [],
+    "p4_price_kw": [],
+    "p5_price_kw": [],
+    "p6_price_kw": [],
+    "p1_price_kwh": [],
+    "p2_price_kwh": [],
+    "p3_price_kwh": [],
+    "p4_price_kwh": [],
+    "p5_price_kwh": [],
+    "p6_price_kwh": [],
+        }
+
+    for index, row in df.iterrows():
+        price_type = f"{row['P_values']}_price_{row['unidades'][2:].lower()}"
+        pdf_scarp_info[price_type].append(row['precios'])
+    
+    return pdf_scarp_info

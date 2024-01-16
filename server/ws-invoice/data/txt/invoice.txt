@@ -1,1 +1,229 @@
-gAseNergy Número de factura: 230083671 DETALLE DE TU CONSUMO Término Potencia 13,48 € P1 3,300 kW x 31 Días x 0,105952 €/kW día P3 3,300 kW x 31 Días x 0,025820 €/kW día Término Energía ATR 5,90 € P1 55 kWh x 0,072991 €/kWh P2 55 kWh x 0,028573 €/kWh P3 102 kWh x 0,003175 €/kWh Término Energía Libre 32,37 € P1 55 kWh x 0,159265 €/kWh P2 55 kWh x 0,185653 €/kWh P3 102 kWh x 0,131326 €/kWh Productos 1,19 € Financiación Bono Social 1 6 ; 2 1 g Base Imponible 54,03 € L LVA. (5,009) 2,70 € : Impuesto sobre la electricidad 0,26 € F 0,50000000 % sobre 52,94 € x 1 1 Alquiler de equipos 0,83 € 8 Alquiler Equipo Distribuidora 2 TOTAL 56,73 € 1 0 DESTINO DEL IMPORTE DE LA FACTURA IMPACTO MEDIO AMBIENTAL , RECORE:0,00 El impacto ambiental de su electricidad depende de las g fuentes energéticas utilizadas para su generación. En una escala de A a G donde A indica el minimo impacto ambiental 9 DÉFICIT:3,24 y G el máximo y que por el valor nacional   correspondiente al 9 nivel D, la energía comercializada por ALQUILER SEGURO TNP:0,72 ENERGIA, SA tiene los siguientes valores: < 3 OTROS: 1,90 1 Impuestos: 2,96 Cargos: 4,00 , Alquiler Contador: ,83 Peajes de Transporte Energía: 39,55 9,39 Distribución: A los importes indicados en diagrama debe añadirse, en su caso, importe 9 del alquiler de los equipos de medida control: 0,83€ Emisiones de dióxido de Residuos radiactivos Alta carbono Actividad El que a buen Gracias por consumir una energía sostenible certificada árbol se arrima, buena sombra le La energía que te hemos suministrado viene avalada como energía renovable por la Oficina Certificadora de Garantías de cobija Origen; perteneciente la Comisión Nacional de los Mercados y Competencia de España. 
+SV01   004959   019817   20231113
+FACTURA DE
+ELECTRICIDAD
+IBERDROLA CLIENTES, S.A.U.
+CIF A-95758389
+jg	DF+""\=[ k
+08676942330033910201602090200010113113
+Remite: IBERDROLA CLIENTES, S.A.U. Apartado de Correos 61175 28080 Madrid
+DY 910 M S 0867694233 0 1 08
+ADRIAN MORON BLANCO
+Plza ANDATZA, 4, 2º C
+20160 LASARTE-ORIA (GIPUZKOA)
+CONTRATO
+Titular
+Potencia:
+ADRIAN MORON BLANCO
+Potencia punta: 3,3 kW
+Potencia valle: 3,3 kW
+Dirección de suministro:
+Plza ANDATZA, 4, 2º C  20160
+LASARTE-ORIA (GIPUZKOA)
+Nº DE CONTRATO: 867694233
+RESUMEN DE FACTURA
+PERIODO DE FACTURACIÓN:
+08/10/2023 - 08/11/2023
+Nº FACTURA:
+21231113010286565
+DIAS FACTURADOS:
+31
+FECHA DE EMISIÓN:
+13 de noviembre de 2023
+ 
+ENERGÍA............................................................................ 62,82 €
+DESCUENTOS ENERGÍA ..............................................-9,38 €
+CARGOS NORMATIVOS ................................................... 1,19 €
+SERVICIOS Y OTROS CONCEPTOS.......................... 0,83 €
+IVA........................................................................................... 2,77 €
+TOTAL
+58,23 €
+FECHA PREVISTA DE COBRO: 21/11/2023
+www.iberdrola.es
+   clientes@tuiberdrola.es
+APP Iberdrola Clientes
+Oficina de Atención Iberdrola:
+Atención al Cliente
+900 225 235
+94 646 01 25
+Notificación
+de averías en la zona
+900171171
+Reparaciones
+eléctricas del hogar
+900 22 45 22
+94 646 29 31
+i-DE, Redes Eléctricas
+Inteligentes, S.A.U.
+¿LE PODEMOS AYUDAR?
+ps
+CALLE MAYOR 44 20160 LASARTE-ORIA
+CALLE ELKANO KALEA 13 20120 HERNANI
+Puede encontrar el desglose detallado de los conceptos
+facturados en el reverso de esta factura. Además, en
+iberdrola.info/factura-luz le explicamos con detalle la factura,
+para que entenderla sea más fácil que nunca.
+1/4
+Documento emitido por IBERDROLA CLIENTES, S.A.U. - domicilio fiscal: C/ Tomás Redondo 1, 28033 Madrid; domicilio social: Plaza Euskadi 5, 48009 Bilbao; inscrita en el Registro Mercantil de Bizkaia, tomo 5448, folio 19, hoja BI-63981, inscripción 1ª - CIF A-95758389
+ÐuvlvÑ
+09100010
+        INFORMACIÓN SOBRE CONSUMO
+Oc.
+23
+Nv.
+23
+kWh
+100
+200
+300
+400
+Consumo total de
+esta factura.
+Consumo medio diario
+en esta factura.
+Consumo medio diario
+en los últimos 1 meses.
+242 kWh
+1,87 €
+2,17 €
+Puede consultar el detalle de su consumo hora a hora en Mi Área Cliente en www.iberdrola.es
+y en la APP de Iberdrola Clientes. También puede acceder a los datos de medida de su
+contador inteligente a través de la web de su empresa distribuidora www.i-de.es/clientes.
+ 
+     EVOLUCIÓN DE CONSUMO (kWh)
+ 
+         
+DETALLE DE FACTURA
+DETALLE DE FACTURA
+INFORMACION ADICIONAL
+El 13,3% está
+destinado a
+impuestos y cargos
+66,1%
+17,2%
+5,2%
+1,4%
+8,1%
+2,0%
+Energía
+66,1%
+Peajes de Transporte y Distribución
+17,2%
+Impuestos
+5,2%
+Alquiler contador
+1,4%
+Bono Social
+2,0%
+Cargos
+8,1%
+Renovables, cogeneración y residuos
+0,0%
+Anualidades del déficit
+6,5%
+Sobrecoste generación no peninsular
+1,5%
+Otros
+0,1%
+ENERGÍA
+Potencia facturada
+Punta 3,3 kW x 31 días x 0,099528 €/kW día
+10,18 €
+Valle 3,3 kW x 31 días x 0,016405 €/kW día
+1,68 €
+Total importe potencia hasta 08/11/2023
+11,86 €
+Energía consumida
+242 kWh  x  0,209469 €/kWh
+50,69 €
+Descuento sobre consumo 15%
+15% s/50,69 €
+-7,60 €
+Descuento sobre T. Potencia
+15% s/11,86 €
+-1,78 €
+CARGOS NORMATIVOS
+Financiación bono social fijo
+31 días  x  0,038455 €/día
+1,19 €
+Impuesto sobre electricidad (*)
+0,5% s/54,36 €
+0,27 €
+TOTAL ENERGÍA
+54,63 €
+SERVICIOS Y OTROS CONCEPTOS
+Alquiler equipos medida
+31 días  x  0,02663 €/día
+0,83 €
+Asistente Smart Iberdrola
+1,01 meses  x  0,99 €/mes
+1,00 €
+Dto Asistente Smart
+100% s/1 €
+-1,00 €
+TOTAL SERVICIOS Y OTROS CONCEPTOS
+0,83 €
+IMPORTE TOTAL
+55,46 €
+IVA Reducido (*)
+5% s/55,46 €
+2,77 €
+TOTAL IMPORTE FACTURA
+58,23 €
+NIF titular del contrato:
+53901164C
+Nº contador:
+0000082040
+Peaje de acceso a la red (ATR):
+2.0TD
+Precios de peajes de acceso:
+B.O.E. del 22/12/2022
+Fecha final del contrato:
+06/10/2024
+Empresa distribuidora:
+i-DE, Redes Eléctricas Inteligentes, S.A.U.
+Número de contrato de acceso:
+0027783790
+Identificación punto de suministro (CUPS):
+ES 0021 0000 0351 8693 SN
+Forma de pago:
+DOMICILIACION BANCARIA
+IBAN:
+ES65 0030 1137 6003 9086 ****
+BIC:
+BSCHESMMXXX
+Código de mandato:
+275464214000
+**** (Ocultos para su seguridad)
+(*) En virtud del Real Decreto-ley 17/2021, de 14 de septiembre, el impuesto especial sobre la electricidad aplicable a su factura se encuentra reducido
+del 5,11269632% al 0,5%.
+Las lecturas desagregadas según la tarifa de acceso, tomadas el 08/11/2023 son: punta: 1.319 kWh; llano: 1.021 kWh; valle 324 kWh, siendo estas lecturas
+reales. Sus consumos desagregados han sido punta: 68 kWh; llano: 68 kWh; valle 106 kWh.
+Las potencias máximas demandadas en el último año han sido 2,64 kW en P1 (punta) y 2,7 kW en P2 (valle).
+Para el periodo de esta factura el consumo medio de electricidad de los suministros en su mismo código postal ha sido de 159,21 kWh.
+El importe de los peajes de acceso a redes en esta factura, sin impuestos, es de 15,56 €, desglosado en: Potencia: 7,49 € , Energía: 7,24 €, Alquiler de
+contador: 0,83 €. Impuestos aplicables:  Impuesto Eléctrico e IVA u otros impuestos indirectos. Estos importes están englobados en el importe total de
+la factura (no representan coste adicional).
+Para reclamaciones relacionadas con el contrato de suministro o la facturación puede dirigirse a cualquiera de los canales de atención indicados en esta
+factura, o en el Apartado de Correos 61090, 28080 de Madrid. Si su reclamación no ha sido resuelta o ha superado el plazo de 30 días, puede dirigirse a
+la Junta Arbitral de Consumo de su Comunidad Autónoma. Además puede acudir a los órganos competentes en materia de Consumo y/o Energía de
+dicha Comunidad Autónoma.
+2/4
+Certificado PEFC. Este papel procede de bosques gestionados de forma sostenible y fuentes controladas. www.pefc.es
+ 
+3/4
+őēįįįēőÒĻļŅîĳúĽĨŏĘĩÖğĦŋĎđŐÙĄġĶ×ÖùĺÝŊėĪ×ĦıĜĵĮŅĺăüıĜáĮıÞęĞħþùĺóČÓŌāèçÔďĔóòéĊćîėèěĸěÒőēįįįēő
+ĉèþýßûüćįúňÿçŋŋĽòĶē×ģíľČãĔėòłćòĀķĢÜĵęéēÒŃäĂĶÞĘĀĵāŐŋİăļĶăđĈŅïĥáóęőķīñéôßķěĖôĘþĕĩċĸíĄãìöÛþĉ
+ńĀĿďĜĜħèĿł÷éÔĸèÚäāŁěľĈçĭķąþĹãėļłßďòÙČÿøĄĽòŃåņīďüĎõùćĝĝġĒėĲÝúÖæĩĠßŉÖĝōóľłŉĮëÚņĨØæÕńĽùłÔėÿĤ
+ŋîôňīåüġĆŉėÝáøĩĢó×ŎėěĢĬĆöĪŌÒŃĪľíıôøĨîċÙðĕłħĿňĸĐĘĦĪàőēĊÕĨāĵåćĵġðďĢÞÒĔĝńúŃĢİĂĮ×èĦłăĞéĤĻłàÞĩ
+ĬŇĒėŐĖħėőÿĽÛġßŎĤĒÛÜĀĶùĘŃòāĊġŐĘĨĖŎÖńļĂŌģÿďĻÙÙĕĹĲĴČĄĢĒĀďŎęĦĖŏēÕŃíâňāûğŊĘģģĥüþĊĿÓûíŐęħęŐĶĜŀü
+ĖłĸÔėûüãŎúĒČÙýĉŀøĜĳÙĖðŐĔăęĵėĘóĮŁßĽäāć×ăñÞġĘĦÙÕĽăņăŊøìĬŇŋøēńĤÚķÓăĵĂłÞìþëīģĳÝĆĳĂăĂúÝėčãÙĄĲğ
+ŅþÒÙįŅħįĘÝÛôĵôŅŎŋúØıùÔĪáîĸĢÞŉĬčĸĬŎĎĄĵġăĪčôðáāĮĥäõôŏďļÞēęĴĵĆÛĵĘÚĳąĶÔĂěîéĖĸĦîŁøďĕőĂŅĮîĥĤŇŌâ
+ŇĪûĢÙĘüäĕŏÚĿĕĲãøìŏöåĖä×ŏõŁěûąİĬĠéňýĐõďĔāěéâĀîīØŇĥŏĳĹĲäŉĀňØĝ÷ňĀŎÕīōđćĺŎðßñèûÓÛĺĉęýĠüÔĩûĵßù
+ÕĉķĝŊéħìőûģĀĉľěŃêģĚîĕŎĆŇļŏĶúŌñĤìŌĜĹìĀĵŅàĵćńóĊßîĊÖńçÛŁĊŅñİçŏĆłāĀďÛĕāĻØĲþĄ×ãăÞŎĝôåņêĥïŃēĤ×ĝ
+ýîĪēĻáüĈóäġĊûčőŁłîáćĳáīÕÝö×ŃôĜ÷ħŀûôīãîúĭÙăŃúûôĪħŎėĦĈðċğÙĔĖŇģíĂŇßĜàāùéċōĲńĂĎîãľďäÞċåłõíľëõ
+ĀĸĊĈçĽħĄĖòÓĖØāÚŐķüĂùĝàĊÿďęŌĽüðñķĈŃÚŎêĢÿĵÖöÔěŁõóęČőñĨĠÕĲØĮŉňĿěłīĊąîęĀóĢĔóĊŏñĞÚÞêĘćùÜñēĚÛìĎ
+čĤÔüĤĤýĒőĥĜİÞÖøĸěĪëĮāīĞĽÝĆőĸıĊŌÚāÞüáłĚĂĲŎďøôŎĐĵćķêëđĮĔġŊĬÚġĩäĕĖĝñĬĲĞĮĐôĹńĵĨĺÓċĄĮđúĬĚáîïŎÖ
+ŎÖņņņÖŎÒĆÚæĺľľĺĢæúĖêĞÖêþĲĞņöĦĒłĒłĂúŎòĺòþÚÖêĖÞĊņêĢĊņĮúŊĖĦŎŊĞÞĮĚŊľþĲŊúâĢîÞĶîÚþĚÒÚĮĖľĒņĒîÒĞâ
+(*) En virtud del Real Decreto-ley 12/2021, de 24 de junio, el IVA aplicable a su factura se encuentra reducido del 21% al 5%.
+En el código QR o en el enlace https://comparador.cnmc.gob.es puede consultar y comparar las distintas ofertas vigentes de
+las comercializadoras de energía eléctrica en mercado libre.
