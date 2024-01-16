@@ -191,7 +191,8 @@ def extract_link_info(link):
     valley_regex = r'pP2=([0-9]+(?:\.[0-9]+)?)'
     link_info["valley_power"] = re.findall(valley_regex, link)[0].replace("pP2=", "")
     flat_regex = r'pP3=([0-9]+(?:\.[0-9]+)?)'
-    link_info["flat_power"] = re.findall(flat_regex, link)[0].replace("pP3=", "")
+    if re.findall(flat_regex, link):
+        link_info["flat_power"] = re.findall(flat_regex, link)[0].replace("pP3=", "")
     sd_regex = r'iniF=([0-9]{4}-[0-9]{2}-[0-9]{2})'
     link_info["start_date"] = re.findall(sd_regex, link)[0].replace("iniF=", "")
     ed_regex = r'finF=([0-9]{4}-[0-9]{2}-[0-9]{2})'
