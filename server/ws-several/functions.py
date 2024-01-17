@@ -49,30 +49,56 @@ def con_filter_info(con, res):
         cursor = con.cursor()
         res_clean = clean_info(res)
 
-        query = f"""
-            SELECT 
-                con_price_P1,
-                con_price_P2,
-                con_price_P3,
-                con_price_P4,
-                con_price_P5,
-                con_price_P6
-            FROM 
-                cia_con_several
-            WHERE
-                cia = '{res_clean['cia']}'
-            AND
-                zone= '{res_clean['zone']}'
-            AND
-                rate= '{res_clean['rate']}'
-            AND
-                indexed_date= '{res_clean['indexed_date']}'
-            AND
-                fee= '{res_clean['fee']}'
-            AND
-                market= '{res_clean['market']}';
+        if res_clean['market'] == "F":
+            query = f"""
+                SELECT 
+                    con_price_P1,
+                    con_price_P2,
+                    con_price_P3,
+                    con_price_P4,
+                    con_price_P5,
+                    con_price_P6
+                FROM 
+                    cia_con_several
+                WHERE
+                    cia = '{res_clean['cia']}'
+                AND
+                    zone= '{res_clean['zone']}'
+                AND
+                    rate= '{res_clean['rate']}'
+                AND
+                    indexed_date= '{res_clean['indexed_date']}'
+                AND
+                    product_cia= '{res_clean['product_cia']}'
+                AND
+                    market= '{res_clean['market']}';
 
-        """
+            """
+        else:
+            query = f"""
+                SELECT 
+                    con_price_P1,
+                    con_price_P2,
+                    con_price_P3,
+                    con_price_P4,
+                    con_price_P5,
+                    con_price_P6
+                FROM 
+                    cia_con_several
+                WHERE
+                    cia = '{res_clean['cia']}'
+                AND
+                    zone= '{res_clean['zone']}'
+                AND
+                    rate= '{res_clean['rate']}'
+                AND
+                    indexed_date= '{res_clean['indexed_date']}'
+                AND
+                    fee= '{res_clean['fee']}'
+                AND
+                    market= '{res_clean['market']}';
+
+            """
         cursor.execute(query)
         results = cursor.fetchall()
         print(results)
@@ -88,39 +114,64 @@ def con_filter_info(con, res):
         else:
             result_con = None
 
-        query = f"""
-            SELECT 
-                pow_price_P1,
-                pow_price_P2,
-                pow_price_P3,
-                pow_price_P4,
-                pow_price_P5,
-                pow_price_P6
-            FROM 
-                cia_pow_several
-            WHERE
-                cia = '{res_clean['cia']}'
-            AND
-                zone= '{res_clean['zone']}'
-            AND
-                rate= '{res_clean['rate']}'
-            AND
-                product_cia= '{res_clean['product_cia']}'
-            AND
-                market= '{res_clean['market']}';
-        """
+        if res_clean['market'] == "F":
+            query = f"""
+                SELECT 
+                    pow_price_P1,
+                    pow_price_P2,
+                    pow_price_P3,
+                    pow_price_P4,
+                    pow_price_P5,
+                    pow_price_P6
+                FROM 
+                    cia_pow_several
+                WHERE
+                    cia = '{res_clean['cia']}'
+                AND
+                    zone= '{res_clean['zone']}'
+                AND
+                    rate= '{res_clean['rate']}'
+                AND
+                    product_cia= '{res_clean['product_cia']}'
+                AND
+                    fee = '{res_clean['fee']}
+                AND
+                    market= '{res_clean['market']}';
+            """
+        else:
+            query = f"""
+                SELECT 
+                    pow_price_P1,
+                    pow_price_P2,
+                    pow_price_P3,
+                    pow_price_P4,
+                    pow_price_P5,
+                    pow_price_P6
+                FROM 
+                    cia_pow_several
+                WHERE
+                    cia = '{res_clean['cia']}'
+                AND
+                    zone= '{res_clean['zone']}'
+                AND
+                    rate= '{res_clean['rate']}'
+                AND
+                    product_cia= '{res_clean['product_cia']}'
+                AND
+                    market= '{res_clean['market']}';
+            """
 
         cursor.execute(query)
         results = cursor.fetchall()
         print(results)
         if results:
             result_pow = {
-                    "pow_price_P1": results[0][0],
-                    "pow_price_P2": results[0][1],
-                    "pow_price_P3": results[0][2],
-                    "pow_price_P4": results[0][3],
-                    "pow_price_P5": results[0][4],
-                    "pow_price_P6": results[0][5]
+                    "pow_price_P1": float(results[0][0]),
+                    "pow_price_P2": float(results[0][1]),
+                    "pow_price_P3": float(results[0][2]),
+                    "pow_price_P4": float(results[0][3]),
+                    "pow_price_P5": float(results[0][4]),
+                    "pow_price_P6": float(results[0][5])
             }
         else:
             result_pow = None
