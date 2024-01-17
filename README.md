@@ -12,10 +12,11 @@ Nuestra colaboración se enfocó en abordar el problema planteado, realizar un a
 ## Estructura del Repositorio
 - [`/Data`](/data/README.md): Carpeta que contiene la información base entregada por "cliente".
 - [`/Database`](/database/README.md): Carpeta de todo lo relacionado con la creación y actualización de la BBDD.
-- [`/Machine Learning`](/MachineLearning/README.md): Código fuente y modelos de machine learning desarrollados para abordar el problema específico.
+- [`/MachineLearning`](/MachineLearning/README.md): Código fuente y modelos de machine learning desarrollados para abordar el problema específico.
 - [`/Server`](/server/README.md): Implementación y documentación de las APIs desarrolladas para la comunicación entre la aplicación web y el backend.
-- [`/Streamlit`](/streamlit/app.py): WebApp de demostración de las API de scrapeo desarrolladas.
-- [`/Memoria Técnica`](/Memoria_Técnica.md): Memoria técnica de los procesos realizados a lo largo del proyecto.
+- [`/Streamlit`](/streamlit/README.md): WebApp de demostración de las API de scrapeo desarrolladas.
+- [`/PowerBi`](/PowerBi/README.md): WebApp de demostración de las API de scrapeo desarrolladas.
+- [`/ProyectReport`](/ProyectReport.md/README.md): Memoria técnica de los procesos realizados a lo largo del proyecto.
 
 
 ## Colaboradores
