@@ -18,8 +18,6 @@ Nuestra colaboración se enfocó en abordar el problema planteado, realizar un a
 - [`/Memoria Técnica`](/Memoria_Técnica.md): Memoria técnica de los procesos realizados a lo largo del proyecto.
 
 
-
-
 ## Colaboradores
 
 - [Javier de Alcázar](https://github.com/Alkaeee)

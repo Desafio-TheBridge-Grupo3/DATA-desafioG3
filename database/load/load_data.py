@@ -48,7 +48,6 @@ def insert_several():
     try:
       df_fixed = read_info_prices(PATH_XLSX, 1, "FIJO")
       df_fixed.drop(columns="Unnamed: 0", inplace=True, axis=1)
-
       df_fixed.rename(columns={"sistema": "zone",
                               "cia": "cia",
                               "producto": "market",
@@ -68,6 +67,12 @@ def insert_several():
                               "P5.": "pow_price_p5",
                               "P6.": "pow_price_p6", 
                               }, inplace=True)
+      
+      df_fixed_info = df_fixed.iloc[:,0:5]
+      df_fixed_con = df_fixed.iloc[:,0:12]
+      df_fixed_pow = df_fixed.iloc[:,12:]
+
+      df_fixed_info_con = pd.merge(df_fixed_info,df_fixed_con)
     
       df_indexed = read_info_prices(PATH_XLSX, 3, "INDEXADO")
       df_indexed_date = df_indexed.iloc[:,0:12]
@@ -90,7 +95,8 @@ def insert_several():
       df_indexed_date["market"] = "INDEXADO"
       df_indexed_date['indexed_date'] = df_indexed_date['indexed_date'].dt.strftime('%d-%m-%Y')
 
-      df_con_sev = pd.concat([df_fixed, df_indexed_date])
+
+      df_con_sev = pd.concat([df_fixed_info_con, df_indexed_date])
       df_con_sev["zone"] = df_con_sev["zone"].apply(lambda zone: "B" if zone == "BALEARES" else ("C" if zone == "CANARIAS" else "P"))
       df_con_sev["market"] = df_con_sev["market"].apply(lambda m: "F" if m == "FIJO" else "I")
       df_con_sev.fillna(value=0)
@@ -117,7 +123,9 @@ def insert_several():
       df_power["zone"] = df_power["zone"].apply(lambda zone: "B" if zone == "BALEARES" else ("C" if zone == "CANARIAS" else "P"))
       df_power["market"] = df_power["market"].apply(lambda m: "F" if m == "FIJO" else "I")
       df_power.fillna(value=0)
-      df_power.to_sql('cia_pow_several', con=engine, index=False, if_exists='replace')
+      df_power["fee"] = ""
+      df_fixed_info_pow = pd.concat([df_power,df_fixed_pow])
+      df_fixed_info_pow.to_sql('cia_pow_several', con=engine, index=False, if_exists='replace')
 
       engine.dispose()
 
